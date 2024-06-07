@@ -1,0 +1,165 @@
+{
+	"info": {
+		"_postman_id": "032e3a70-be66-4716-b55b-893009aaee99",
+		"name": "Node SQL Server App",
+		"description": "Collection for testing Node SQL Server App CRUD operations",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "26426417"
+	},
+	"item": [
+		{
+			"name": "Create Nota",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"nome\": \"Nota 1\",\n  \"descricao\": \"Descrição da Nota 1\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/notas",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"notas"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Notas",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/buscar-notas",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"buscar-notas"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Nota by ID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/notas/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"notas",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Nota by ID",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"nome\": \"Nota 1 Atualizada\",\n  \"descricao\": \"Descrição da Nota 1 Atualizada\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/notas/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"notas",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Nota by ID",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/notas/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"notas",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Liveness Check",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/liveness",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"liveness"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Readiness Check",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/readiness",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"readiness"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
