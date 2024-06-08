@@ -1,0 +1,35 @@
+version: '3.7'
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: sqlserver-atividadecloud
+    environment:
+      SA_PASSWORD: 'password@Password'
+      ACCEPT_EULA: 'Y'
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserverdata-atividadecloud:/var/opt/mssql
+    networks:
+      - sqlserver_network
+
+  app:
+    image: gcoelhotech/node-sqlserver-app:latest
+    ports:
+      - "3000:3000"
+    depends_on:
+      - sqlserver
+    environment:
+      DB_SERVER: sqlserver
+      DB_USER: sa
+      DB_PASSWORD: 'password@Password'
+      DB_NAME: master
+      DB_PORT: 1433
+    networks:
+      - sqlserver_network
+
+networks:
+  sqlserver_network:
+
+volumes:
+  sqlserverdata-atividadecloud:
