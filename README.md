@@ -1,5 +1,3 @@
-Aqui está um arquivo `README.md` com o passo a passo detalhado para executar a aplicação, incluindo as etapas para configurar o banco de dados SQL Server, criar o job para inserção de dados e rodar a aplicação com Docker.
-
 # Node SQL Server Application - Atividade 4 Cloud - Gabriel Oliveira de Sousa Coelho - RA: 10482211337
 
 ## Descrição
@@ -55,7 +53,7 @@ services:
       DB_SERVER: sqlserver
       DB_USER: sa
       DB_PASSWORD: 'password@Password'
-      DB_NAME: data-base
+      DB_NAME: master
       DB_PORT: 1433
     networks:
       - sqlserver_network
@@ -95,7 +93,7 @@ No prompt do SQL Server, execute o script para criar a tabela e inserir os dados
 CREATE DATABASE [data-base];
 USE [data-base];
 
-CREATE TABLE tb_Notas_temp (
+CREATE TABLE tb_Notas (
     id INT IDENTITY(1,1) PRIMARY KEY,
     nome NVARCHAR(255),
     descricao NVARCHAR(255)
@@ -116,7 +114,7 @@ END
 
 Acesse a aplicação no navegador para verificar se está funcionando.
 
-- URL da aplicação: [http://localhost:3000/buscar-notas](http://localhost:3000/consulta-dados)
+- URL da aplicação: [http://localhost:3000/buscar-notas](http://localhost:3000/buscar-notas)
 - Endpoints adicionais:
   - Liveness Check: [http://localhost:3000/liveness](http://localhost:3000/liveness)
   - Readiness Check: [http://localhost:3000/readiness](http://localhost:3000/readiness)
@@ -159,21 +157,89 @@ Você pode criar um job no SQL Server Agent para automatizar as inserções, cas
 2. Navegue até SQL Server Agent > Jobs > New Job.
 3. Configure o job com um script de inserção similar ao descrito anteriormente.
 
+### 8. Configuração de Rede Docker para Execução em Conjunto
+
+#### 8.1. Criar a Rede Docker
+
+Crie uma rede Docker chamada `sqlserver_network`.
+
+```bash
+docker network create sqlserver_network
+```
+
+#### 8.2. Rodar o Contêiner SQL Server na Rede
+
+Execute o contêiner SQL Server dentro da rede `sqlserver_network`.
+
+```bash
+docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=password@Password" \
+--network sqlserver_network \
+--name sqlserver-atividadecloud-test \
+-p 1433:1433 \
+-d mcr.microsoft.com/mssql/server:2019-latest
+```
+
+#### 8.3. Rodar o Contêiner da Aplicação na Rede
+
+Execute o contêiner da aplicação na mesma rede.
+
+```bash
+docker run -e DB_SERVER=sqlserver-atividadecloud-test \
+-e DB_USER=sa \
+-e DB_PASSWORD=password@Password \
+-e DB_NAME=master \
+--network sqlserver_network \
+--name node-sqlserver-app \
+-p 3000:3000 \
+-d gcoelhotech/node-sqlserver-app
+```
+
+### 9. Baixar e Rodar a Imagem do Docker Hub
+
+#### 9.1. Baixar a Imagem do Docker Hub
+
+Use o comando abaixo para baixar a imagem diretamente do Docker Hub.
+
+```bash
+docker pull gcoelhotech/node-sqlserver-app
+```
+
+#### 9.2. Executar a Imagem Baixada
+
+Depois de baixar a imagem, você pode executá-la com o comando:
+
+```bash
+docker run -e DB_SERVER=sqlserver-atividadecloud-test \
+-e DB_USER=sa \
+-e DB_PASSWORD=password@Password \
+-e DB_NAME=master \
+--network sqlserver_network \
+--name node-sqlserver-app \
+-p 3000:3000 \
+-d gcoelhotech/node-sqlserver-app
+```
+
+### 10. Solução de Problemas
+
+Se encontrar problemas ao conectar a aplicação ao banco de dados, verifique:
+
+- **Rede Docker**: Certifique-se de que os contêineres estão na mesma rede.
+- **Variáveis de Ambiente**: Verifique se as variáveis de ambiente estão configuradas corretamente.
+- **Logs de Erro**: Consulte os logs dos contêineres para mais detalhes sobre possíveis erros.
+
+```bash
+docker logs node-sqlserver-app
+docker logs sqlserver-atividadecloud-test
+```
+
+### 11. Conclusão
+
+Com esses passos, você deve ser capaz de configurar, executar e publicar a aplicação. Certifique-se de que o Docker e Docker Compose estão corretamente instalados e configurados em seu ambiente. Caso encontre problemas, verifique os logs dos contêineres para obter mais informações sobre erros e possíveis soluções.
+
 ## Links
 
 - **GitHub**: [https://github.com/seu-usuario/node-sqlserver-app](https://github.com/seu-usuario/node-sqlserver-app)
 - **Docker Hub**: [https://hub.docker.com/r/seu-usuario/node-sqlserver-app](https://hub.docker.com/r/seu-usuario/node-sqlserver-app)
-
-## Considerações Finais
-
-Certifique-se de que o Docker e Docker Compose estão corretamente instalados e configurados em seu ambiente. Caso encontre problemas, verifique os logs dos containers para obter mais informações sobre erros e possíveis soluções.
-
-
-## Arquivos 
-Foi adicionado imagens e um Coleção do postman com todos as requisições da aplicação.
-Na pasta ./imagens tera os prints 
-Na raiz do projeto terá a coleção do postman para importação
-
 
 ## Links App
 
